@@ -161,8 +161,12 @@ defaultInlineRender inlineRender = \case
     let title = maybe [] (pure . title_) mtitle
      in a_ (href_ (URI.render dest) : title) (mapM_ inlineRender inner)
   Image desc src mtitle ->
-    let title = maybe [] (pure . title_) mtitle
-     in img_ (alt_ (asPlainText desc) : src_ (URI.render src) : title)
+    figure_ $ do
+      img_ (alt_ (asPlainText desc) : src_ (URI.render src) : title)
+      figcaption_ (foldMap inlineRender desc)
+
+    where title = maybe [] (pure . title_) mtitle
+
 
 -- | HTML containing a newline.
 newline :: Html ()
